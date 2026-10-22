@@ -30,20 +30,23 @@ export async function generateInvoicePDF(invoice, subtotal, taxAmount, total) {
   // ==========================================
   let curY = sheetY + innerPad + 4;
 
-  // Sender Name (Bold uppercase)
+  // Sender Name (Bold uppercase, constrained)
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
+  doc.setFontSize(13);
   doc.setTextColor(17, 24, 39); // text-gray-900
-  doc.text((invoice.sender.name || 'Your Company Name').toUpperCase(), contentX, curY);
+  const rawSenderName = (invoice.sender.name || 'Your Company Name').toUpperCase();
+  const safeSenderName = rawSenderName.length > 40 ? rawSenderName.substring(0, 40) + '…' : rawSenderName;
+  doc.text(safeSenderName, contentX, curY);
 
   // Sender Email & Address
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
   doc.setTextColor(75, 85, 99); // text-gray-600
-  doc.text(invoice.sender.email || 'company@email.com', contentX, curY + 5);
+  const safeSenderEmail = (invoice.sender.email || 'company@email.com').substring(0, 45);
+  doc.text(safeSenderEmail, contentX, curY + 5);
 
   doc.setTextColor(107, 114, 128); // text-gray-500
-  const addrLines = doc.splitTextToSize(invoice.sender.address || 'Company Address', 75);
+  const addrLines = doc.splitTextToSize((invoice.sender.address || 'Company Address').substring(0, 80), 75).slice(0, 2);
   doc.text(addrLines, contentX, curY + 9.5);
 
   // Right Header: TAX INVOICE
@@ -109,17 +112,21 @@ export async function generateInvoicePDF(invoice, subtotal, taxAmount, total) {
   doc.text('BILL TO (CUSTOMER DETAILS):', contentX + 3.5, billToY + 5);
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10.5);
+  doc.setFontSize(10);
   doc.setTextColor(17, 24, 39); // text-gray-900
-  doc.text(invoice.client.name || 'Client / Customer Name', contentX + 3.5, billToY + 10.5);
+  const rawClientName = invoice.client.name || 'Client / Customer Name';
+  const safeClientName = rawClientName.length > 45 ? rawClientName.substring(0, 45) + '…' : rawClientName;
+  doc.text(safeClientName, contentX + 3.5, billToY + 10.5);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(75, 85, 99); // text-gray-600
-  doc.text(invoice.client.email || 'client@email.com', contentX + 3.5, billToY + 15.5);
+  const safeClientEmail = (invoice.client.email || 'client@email.com').substring(0, 45);
+  doc.text(safeClientEmail, contentX + 3.5, billToY + 15.5);
 
   doc.setTextColor(107, 114, 128); // text-gray-500
-  doc.text(invoice.client.address || 'Client Billing Address', contentX + 3.5, billToY + 20);
+  const clientAddr = (invoice.client.address || 'Client Billing Address').substring(0, 80);
+  doc.text(clientAddr, contentX + 3.5, billToY + 20);
 
   // ==========================================
   // 3. ITEMS & SERVICES TABLE
@@ -189,10 +196,18 @@ export async function generateInvoicePDF(invoice, subtotal, taxAmount, total) {
     doc.setTextColor(107, 114, 128); // text-gray-500
     doc.text(String(index + 1), colPos.num + (colW.num / 2), rowY + 5.5, { align: 'center' });
 
-    // Description
+    // Description (truncate with ellipsis if wider than column)
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(17, 24, 39); // text-gray-900
-    doc.text(item.description || 'Item description', colPos.desc + 3, rowY + 5.5);
+    const maxDescW = colW.desc - 6;
+    let descText = (item.description || 'Item description').trim();
+    if (doc.getTextWidth(descText) > maxDescW) {
+      while (doc.getTextWidth(descText + '…') > maxDescW && descText.length > 0) {
+        descText = descText.slice(0, -1);
+      }
+      descText += '…';
+    }
+    doc.text(descText, colPos.desc + 3, rowY + 5.5);
 
     // Qty
     doc.setFont('helvetica', 'normal');
@@ -250,7 +265,7 @@ export async function generateInvoicePDF(invoice, subtotal, taxAmount, total) {
     doc.text('Note: ', contentX + 3, notesBoxY + 19.5);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(31, 41, 55);
-    const nLines = doc.splitTextToSize(invoice.notes, leftColW - 16);
+    const nLines = doc.splitTextToSize(invoice.notes.substring(0, 100), leftColW - 16).slice(0, 2);
     doc.text(nLines, contentX + 13, notesBoxY + 19.5);
   }
 
