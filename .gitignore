@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local notes, developer profile & project planning (never commit to GitHub)
+DEVELOPER_PROFILE.md
+IMPLEMENTATION_PLAN.md
+NOTES.md
+REQUIREMENTS.md
