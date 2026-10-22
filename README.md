@@ -108,4 +108,4 @@ invoice-builder/
 ---
 
 ## 📄 License
-Created for GUVI Capstone Project evaluation.
+This project is licensed under the [MIT License](LICENSE) — created for GUVI Capstone Project evaluation.
