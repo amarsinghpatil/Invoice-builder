@@ -1,7 +1,5 @@
 # 📰 Invoice Builder — GUVI Capstone Project #2
-
-> 🌐 **Live Deployed App:** [https://invoice-builder-app-one.vercel.app/](https://invoice-builder-app-one.vercel.app/)  
-> 📦 **GitHub Repository:** [https://github.com/amarsinghpatil/Invoice-builder](https://github.com/amarsinghpatil/Invoice-builder)  
+ 
 > 📄 **License:** [MIT License](LICENSE)
 
 A responsive, high-performance web application designed for small businesses and freelancers to generate, customize, print, and export professional tax invoices in real-time.
