@@ -99,13 +99,6 @@ invoice-builder/
 
 ---
 
-## 🎯 GUVI Evaluation Rubric Checklist
-
-- [x] **Milestone 1**: State model and calculations (Subtotal, GST 18%, Grand Total).
-- [x] **Milestone 2**: Unified input editor form with dynamic item addition/removal and live updates.
-- [x] **Milestone 3**: Live responsive preview sheet reflecting user inputs in real-time.
-- [x] **Milestone 4**: Persistence (`localStorage`), browser print (`window.print`), and 1-click PDF download (`.pdf`).
-- [x] **Milestone 5**: Production code quality, zero console errors, responsive layout, and documentation.
 
 ---
 
